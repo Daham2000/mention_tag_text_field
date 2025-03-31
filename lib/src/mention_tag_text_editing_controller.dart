@@ -327,7 +327,7 @@ class MentionTagTextEditingController extends TextEditingController {
             child: mention.stylingWidget ??
                  Container(
                           padding: EdgeInsets.all(4.0),
-                        child: TextSpan(text: e, style: style)
+                        child: Text(e)
                           ),
           ); 
       }).toList(),
