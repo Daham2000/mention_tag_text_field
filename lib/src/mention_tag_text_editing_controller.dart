@@ -324,13 +324,57 @@ class MentionTagTextEditingController extends TextEditingController {
         return WidgetSpan(
             alignment: PlaceholderAlignment.middle,
             
-            child: Container(
-                          padding: EdgeInsets.all(4.0),
-                        child: Text(e)
-                          ),
+            child:  RichText(
+          text: TextSpan(
+            children: _buildTextSpans(e, style),
+          ),
+        ),
                  
           ); 
       }).toList(),
     );
   }
+
+  List<TextSpan> _buildTextSpans(String text, TextStyle mentionStyle) {
+  final RegExp linkRegExp = RegExp(
+    r'((https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- ;,./?%&=]*)?)',
+    caseSensitive: false,
+  );
+
+  List<TextSpan> spans = [];
+  int start = 0;
+
+  linkRegExp.allMatches(text).forEach((match) {
+    if (match.start > start) {
+      spans.add(TextSpan(
+        text: text.substring(start, match.start),
+        style: mentionStyle,
+      ));
+    }
+
+    spans.add(TextSpan(
+      text: match.group(0),
+      style: mentionStyle.copyWith(
+        color: Colors.blue,
+        decoration: TextDecoration.underline,
+      ),
+      recognizer: TapGestureRecognizer()
+        ..onTap = () {
+          print("Tapped on link: ${match.group(0)}");
+          // Optionally, launch the URL using `url_launcher` package
+        },
+    ));
+
+    start = match.end;
+  });
+
+  if (start < text.length) {
+    spans.add(TextSpan(
+      text: text.substring(start),
+      style: mentionStyle,
+    ));
+  }
+
+  return spans;
+}
 }
