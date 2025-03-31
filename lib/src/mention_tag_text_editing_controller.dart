@@ -324,11 +324,11 @@ class MentionTagTextEditingController extends TextEditingController {
         return WidgetSpan(
             alignment: PlaceholderAlignment.middle,
             
-            child: mention.stylingWidget ??
-                 Container(
+            child: Container(
                           padding: EdgeInsets.all(4.0),
                         child: Text(e)
                           ),
+                 
           ); 
       }).toList(),
     );
