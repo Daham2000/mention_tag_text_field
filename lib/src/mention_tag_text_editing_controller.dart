@@ -47,7 +47,7 @@ class MentionTagTextEditingController extends TextEditingController {
       final String mention = mentionTagDecoration.showMentionStartSymbol
           ? removedMention.mention
           : "${removedMention.mentionSymbol}${removedMention.mention}";
-      return mention;
+      return mention + "sssssW";
     });
   }
 
