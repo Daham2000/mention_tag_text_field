@@ -324,55 +324,17 @@ class MentionTagTextEditingController extends TextEditingController {
           );
         }
         if (_validURL) {
-            return WidgetSpan(
-            alignment: PlaceholderAlignment.middle,
-            
-            child:  Text("Http://")
-                 
-          ); 
+             return TextSpan(text: "WWW", style: const TextStyle(
+          color: Colors.blue,
+          decoration: TextDecoration.underline,
+        ),);
         } else {
-            return WidgetSpan(
-            alignment: PlaceholderAlignment.middle,
-            
-            child:  Text(e)
-                 
-          ); 
+           return TextSpan(text: e, style: style);
         }
       
       }).toList(),
     );
   }
-
-  List<TextSpan> _buildTextSpans(String text) {
-  final RegExp linkRegExp = RegExp(
-    r'((https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- ;,./?%&=]*)?)',
-    caseSensitive: false,
-  );
-
-  List<TextSpan> spans = [];
-  int start = 0;
-
-  linkRegExp.allMatches(text).forEach((match) {
-    if (match.start > start) {
-      spans.add(TextSpan(
-        text: text.substring(start, match.start),
-      ));
-    }
-
-    spans.add(TextSpan(
-      text: match.group(0),
-    ));
-
-    start = match.end;
-  });
-
-  if (start < text.length) {
-    spans.add(TextSpan(
-      text: text.substring(start),
-    ));
-  }
-  return spans;
-}
 
   bool isURl(String url){
 return  RegExp(r'^((?:.|\n)*?)((http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?)')
