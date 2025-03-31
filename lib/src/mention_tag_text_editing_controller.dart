@@ -324,7 +324,7 @@ class MentionTagTextEditingController extends TextEditingController {
           );
         }
         if (_validURL) {
-             return TextSpan(text: "WWW", style: const TextStyle(
+             return TextSpan(text: e, style: TextStyle(
           color: Colors.blue,
           decoration: TextDecoration.underline,
         ),);
