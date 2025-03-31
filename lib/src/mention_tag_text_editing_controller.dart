@@ -358,11 +358,6 @@ class MentionTagTextEditingController extends TextEditingController {
         color: Colors.blue,
         decoration: TextDecoration.underline,
       ),
-      recognizer: TapGestureRecognizer()
-        ..onTap = () {
-          print("Tapped on link: ${match.group(0)}");
-          // Optionally, launch the URL using `url_launcher` package
-        },
     ));
 
     start = match.end;
