@@ -353,10 +353,6 @@ class MentionTagTextEditingController extends TextEditingController {
 
     spans.add(TextSpan(
       text: match.group(0),
-      style: mentionStyle.copyWith(
-        color: Colors.blue,
-        decoration: TextDecoration.underline,
-      ),
     ));
 
     start = match.end;
