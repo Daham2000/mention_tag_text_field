@@ -326,7 +326,7 @@ class MentionTagTextEditingController extends TextEditingController {
             
             child:  RichText(
           text: TextSpan(
-            children: _buildTextSpans(e, style),
+            children: _buildTextSpans(e),
           ),
         ),
                  
@@ -335,7 +335,7 @@ class MentionTagTextEditingController extends TextEditingController {
     );
   }
 
-  List<TextSpan> _buildTextSpans(String text, TextStyle mentionStyle) {
+  List<TextSpan> _buildTextSpans(String text) {
   final RegExp linkRegExp = RegExp(
     r'((https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- ;,./?%&=]*)?)',
     caseSensitive: false,
@@ -348,7 +348,6 @@ class MentionTagTextEditingController extends TextEditingController {
     if (match.start > start) {
       spans.add(TextSpan(
         text: text.substring(start, match.start),
-        style: mentionStyle,
       ));
     }
 
@@ -366,7 +365,6 @@ class MentionTagTextEditingController extends TextEditingController {
   if (start < text.length) {
     spans.add(TextSpan(
       text: text.substring(start),
-      style: mentionStyle,
     ));
   }
 
