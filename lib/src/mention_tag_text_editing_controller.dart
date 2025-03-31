@@ -305,7 +305,7 @@ class MentionTagTextEditingController extends TextEditingController {
     return TextSpan(
       style: style,
       children: res.map((e) {
-        bool _validURL = Uri.parse(e).isAbsolute;
+        final _validURL = isURl(e)
 
         if (e == Constants.mentionEscape) {
           final mention = tempList.removeAt(0);
@@ -373,4 +373,8 @@ class MentionTagTextEditingController extends TextEditingController {
   }
   return spans;
 }
+
+  bool isURl(String url){
+return  RegExp(r'^((?:.|\n)*?)((http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?)')
+    .hasMatch(url);  }
 }
