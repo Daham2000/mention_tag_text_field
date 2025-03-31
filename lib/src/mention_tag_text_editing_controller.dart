@@ -312,7 +312,7 @@ class MentionTagTextEditingController extends TextEditingController {
             alignment: PlaceholderAlignment.middle,
             child: mention.stylingWidget ??
                 Text(
-                  mention.mention,
+                  mention.mention + " WWW",
                   style: mentionTagDecoration.mentionTextStyle,
                 ),
           );
