@@ -305,6 +305,8 @@ class MentionTagTextEditingController extends TextEditingController {
     return TextSpan(
       style: style,
       children: res.map((e) {
+        bool _validURL = Uri.parse(e).isAbsolute;
+
         if (e == Constants.mentionEscape) {
           final mention = tempList.removeAt(0);
 
@@ -321,16 +323,22 @@ class MentionTagTextEditingController extends TextEditingController {
                           ),
           );
         }
-        return WidgetSpan(
+        if (_validURL) {
+            return WidgetSpan(
             alignment: PlaceholderAlignment.middle,
             
-            child:  RichText(
-          text: TextSpan(
-            children: _buildTextSpans(e),
-          ),
-        ),
+            child:  Text("Http://")
                  
           ); 
+        } else {
+            return WidgetSpan(
+            alignment: PlaceholderAlignment.middle,
+            
+            child:  Text(e)
+                 
+          ); 
+        }
+      
       }).toList(),
     );
   }
