@@ -367,7 +367,6 @@ class MentionTagTextEditingController extends TextEditingController {
       text: text.substring(start),
     ));
   }
-
   return spans;
 }
 }
