@@ -47,7 +47,7 @@ class MentionTagTextEditingController extends TextEditingController {
       final String mention = mentionTagDecoration.showMentionStartSymbol
           ? removedMention.mention
           : "${removedMention.mentionSymbol}${removedMention.mention}";
-      return mention + "sssssW";
+      return mention;
     });
   }
 
@@ -312,7 +312,7 @@ class MentionTagTextEditingController extends TextEditingController {
             alignment: PlaceholderAlignment.middle,
             child: mention.stylingWidget ??
                 Text(
-                  mention.mention + " WWW",
+                  mention.mention,
                   style: mentionTagDecoration.mentionTextStyle,
                 ),
           );
