@@ -321,7 +321,15 @@ class MentionTagTextEditingController extends TextEditingController {
                           ),
           );
         }
-        return TextSpan(text: e, style: style);
+        return WidgetSpan(
+            alignment: PlaceholderAlignment.middle,
+            
+            child: mention.stylingWidget ??
+                 Container(
+                          padding: EdgeInsets.all(4.0),
+                        child: TextSpan(text: e, style: style)
+                          ),
+          ); 
       }).toList(),
     );
   }
