@@ -328,7 +328,7 @@ class MentionTagTextEditingController extends TextEditingController {
         List<String> parts = e.split(" ");
         return TextSpan(
           children: parts.map<InlineSpan>((text) {
-            final _validURL = isURL(text);
+            final _validURL = isURl(text);
             if (_validURL) {
               return TextSpan(
                 text: "$text ",
