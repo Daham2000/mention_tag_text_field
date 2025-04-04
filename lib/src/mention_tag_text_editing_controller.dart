@@ -293,57 +293,61 @@ class MentionTagTextEditingController extends TextEditingController {
   }
 
   @override
-  TextSpan buildTextSpan(
-      {required BuildContext context,
-      TextStyle? style,
-      required bool withComposing}) {
-    final regexp = RegExp(
-        '(?=${Constants.mentionEscape})|(?<=${Constants.mentionEscape})');
+  TextSpan buildTextSpan({
+    required BuildContext context,
+    TextStyle? style,
+    required bool withComposing,
+  }) {
+    final regexp =
+    RegExp('(?=${Constants.mentionEscape})|(?<=${Constants.mentionEscape})');
     final res = super.text.split(regexp);
     final List tempList = List.from(_mentions);
 
     return TextSpan(
       style: style,
-      children: res.map((e) {
+      children: res.map<InlineSpan>((e) {
         print("eeeee: " + e.toString());
-       
-
 
         if (e == Constants.mentionEscape) {
           final mention = tempList.removeAt(0);
 
           return WidgetSpan(
             alignment: PlaceholderAlignment.middle,
-            
             child: mention.stylingWidget ??
-                 Container(
-                          padding: EdgeInsets.all(4.0),
-                        child: Text(
-                          mention.mention,
-                          style: mentionTagDecoration.mentionTextStyle,
-                        ),
-                          ),
+                Container(
+                  padding: EdgeInsets.all(4.0),
+                  child: Text(
+                    mention.mention,
+                    style: mentionTagDecoration.mentionTextStyle,
+                  ),
+                ),
           );
         }
-        List<String> parts = e.split(" ");
-        parts.map((text) {
-            final _validURL = isURl(text);
-            if (_validURL) {
-             return TextSpan(text: text, style: TextStyle(
-                color: Colors.blue,
-                decoration: TextDecoration.underline,
-            ),);
-          } else {
-             return TextSpan(text: e, style: style);
-          }
-        });
 
-      
+        // Handle URLs inside the text
+        List<String> parts = e.split(" ");
+        return TextSpan(
+          children: parts.map<InlineSpan>((text) {
+            final _validURL = isURL(text);
+            if (_validURL) {
+              return TextSpan(
+                text: "$text ",
+                style: TextStyle(
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                ),
+              );
+            } else {
+              return TextSpan(text: "$text ", style: style);
+            }
+          }).toList(),
+        );
       }).toList(),
     );
   }
 
-    bool isURl(String url){
+
+  bool isURl(String url){
 return  RegExp(r'^((?:.|\n)*?)((http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?)')
     .hasMatch(url);  }
 }
