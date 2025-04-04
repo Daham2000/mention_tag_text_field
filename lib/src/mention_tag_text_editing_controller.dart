@@ -305,6 +305,7 @@ class MentionTagTextEditingController extends TextEditingController {
     return TextSpan(
       style: style,
       children: res.map((e) {
+        print("eeeee: " + e.toString());
         final _validURL = isURl(e);
 
         if (e == Constants.mentionEscape) {
