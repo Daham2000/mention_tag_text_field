@@ -27,6 +27,11 @@ class MentionTagTextEditingController extends TextEditingController {
 
   late int _cursorPosition;
   int? _indexMentionEnd;
+  bool isReadOnly = false;
+
+  void setIsReadOnly(){
+    isReadOnly = true
+  }
 
   final List<MentionTagElement> _mentions = [];
 
@@ -292,6 +297,8 @@ class MentionTagTextEditingController extends TextEditingController {
     }
   }
 
+  
+
   @override
   TextSpan buildTextSpan({
     required BuildContext context,
@@ -338,7 +345,7 @@ class MentionTagTextEditingController extends TextEditingController {
                 ),
               );
             } else {
-              return TextSpan(text: "$text ", style: style);
+              return TextSpan(text: "$text", style: style);
             }
           }).toList(),
         );
