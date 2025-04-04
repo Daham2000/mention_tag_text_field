@@ -29,8 +29,8 @@ class MentionTagTextEditingController extends TextEditingController {
   int? _indexMentionEnd;
   bool isReadOnly = false;
 
-  void setIsReadOnly(){
-    isReadOnly = true
+  void setIsReadOnly() {
+    isReadOnly = true;
   }
 
   final List<MentionTagElement> _mentions = [];
@@ -81,13 +81,13 @@ class MentionTagTextEditingController extends TextEditingController {
       _temp = super.text;
 
       final mentionSymbol =
-          mentionTuple.$1.checkMentionSymbol(mentionTagDecoration.mentionStart);
+      mentionTuple.$1.checkMentionSymbol(mentionTagDecoration.mentionStart);
       if (mentionSymbol.isEmpty) throw 'No mention symbol with initialMention';
 
       final mention = mentionTagDecoration.showMentionStartSymbol
           ? mentionTuple.$1
           : mentionTuple.$1
-              .removeMentionStart(mentionTagDecoration.mentionStart);
+          .removeMentionStart(mentionTagDecoration.mentionStart);
 
       _mentions.add(MentionTagElement(
           mentionSymbol: mentionSymbol,
@@ -166,9 +166,12 @@ class MentionTagTextEditingController extends TextEditingController {
 
   int _getIndexFromMentionStart(int indexCursor, String value) {
     final mentionStartPattern =
-        RegExp(mentionTagDecoration.mentionStart.join('|'));
+    RegExp(mentionTagDecoration.mentionStart.join('|'));
     var indexMentionStart =
-        value.substring(0, indexCursor).reversed.indexOf(mentionStartPattern);
+    value
+        .substring(0, indexCursor)
+        .reversed
+        .indexOf(mentionStartPattern);
     return indexMentionStart;
   }
 
@@ -235,11 +238,9 @@ class MentionTagTextEditingController extends TextEditingController {
     _temp = value;
   }
 
-  void _checkAndUpdateOnMention(
-    String value,
-    int mentionsCountTillCursor,
-    int indexCursor,
-  ) {
+  void _checkAndUpdateOnMention(String value,
+      int mentionsCountTillCursor,
+      int indexCursor,) {
     if (_temp.length - value.length != 1) return;
     if (mentionsCountTillCursor < 1) return;
 
@@ -251,7 +252,7 @@ class MentionTagTextEditingController extends TextEditingController {
     final isCursorAtMention = (indexCursor - indexMentionEscape) == 1;
     if (isCursorAtMention) {
       final MentionTagElement cursorMention =
-          _mentions[mentionsCountTillCursor - 1];
+      _mentions[mentionsCountTillCursor - 1];
       final mentionText = mentionTagDecoration.showMentionStartSymbol
           ? cursorMention.mention
           : "${cursorMention.mentionSymbol}${cursorMention.mention}";
@@ -266,13 +267,13 @@ class MentionTagTextEditingController extends TextEditingController {
       final mentionsCount = value.countChar(Constants.mentionEscape);
       final textPart = super.text.substring(0, indexCursor);
       final mentionsCountTillCursor =
-          textPart.countChar(Constants.mentionEscape);
+      textPart.countChar(Constants.mentionEscape);
 
       _checkAndUpdateOnMention(value, mentionsCountTillCursor, indexCursor);
       if (mentionsCount == _mentions.length) return;
 
       final MentionTagElement removedMention =
-          _mentions.removeAt(mentionsCountTillCursor);
+      _mentions.removeAt(mentionsCountTillCursor);
 
       if (mentionTagDecoration.allowDecrement &&
           _temp.length - value.length == 1) {
@@ -297,7 +298,6 @@ class MentionTagTextEditingController extends TextEditingController {
     }
   }
 
-  
 
   @override
   TextSpan buildTextSpan({
@@ -305,56 +305,102 @@ class MentionTagTextEditingController extends TextEditingController {
     TextStyle? style,
     required bool withComposing,
   }) {
-    final regexp =
-    RegExp('(?=${Constants.mentionEscape})|(?<=${Constants.mentionEscape})');
-    final res = super.text.split(regexp);
-    final List tempList = List.from(_mentions);
+    if (isReadOnly) {
+      final regexp =
+      RegExp('(?=${Constants.mentionEscape})|(?<=${Constants.mentionEscape})');
+      final res = super.text.split(regexp);
+      final List tempList = List.from(_mentions);
 
-    return TextSpan(
-      style: style,
-      children: res.map<InlineSpan>((e) {
-        print("eeeee: " + e.toString());
+      return TextSpan(
+        style: style,
+        children: res.map<InlineSpan>((e) {
+          print("eeeee: " + e.toString());
 
-        if (e == Constants.mentionEscape) {
-          final mention = tempList.removeAt(0);
+          if (e == Constants.mentionEscape) {
+            final mention = tempList.removeAt(0);
 
-          return WidgetSpan(
-            alignment: PlaceholderAlignment.middle,
-            child: mention.stylingWidget ??
-                Container(
-                  padding: EdgeInsets.all(4.0),
-                  child: Text(
-                    mention.mention,
-                    style: mentionTagDecoration.mentionTextStyle,
+            return WidgetSpan(
+              alignment: PlaceholderAlignment.middle,
+              child: mention.stylingWidget ??
+                  Container(
+                    padding: EdgeInsets.all(4.0),
+                    child: Text(
+                      mention.mention,
+                      style: mentionTagDecoration.mentionTextStyle,
+                    ),
                   ),
-                ),
-          );
-        }
+            );
+          }
 
-        // Handle URLs inside the text
-        List<String> parts = e.split(" ");
-        return TextSpan(
-          children: parts.map<InlineSpan>((text) {
+          // Handle URLs inside the text
+          List<String> parts = e.split(" ");
+          return TextSpan(
+            children: parts.map<InlineSpan>((text) {
+              final _validURL = isURl(text);
+              if (_validURL) {
+                return TextSpan(
+                  text: "$text ",
+                  style: TextStyle(
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
+                  ),
+                );
+              } else {
+                return TextSpan(text: "$text", style: style);
+              }
+            }).toList(),
+          );
+        }).toList(),
+      );
+    } else {
+      final regexp = RegExp(
+          '(?=${Constants.mentionEscape})|(?<=${Constants.mentionEscape})');
+      final res = super.text.split(regexp);
+      final List tempList = List.from(_mentions);
+
+      return TextSpan(
+        style: style,
+        children: res.map((e) {
+          print("eeeee: " + e.toString());
+
+
+          if (e == Constants.mentionEscape) {
+            final mention = tempList.removeAt(0);
+
+            return WidgetSpan(
+              alignment: PlaceholderAlignment.middle,
+
+              child: mention.stylingWidget ??
+                  Container(
+                    padding: EdgeInsets.all(4.0),
+                    child: Text(
+                      mention.mention,
+                      style: mentionTagDecoration.mentionTextStyle,
+                    ),
+                  ),
+            );
+          }
+          List<String> parts = e.split(" ");
+          parts.map((text) {
             final _validURL = isURl(text);
             if (_validURL) {
-              return TextSpan(
-                text: "$text ",
-                style: TextStyle(
-                  color: Colors.blue,
-                  decoration: TextDecoration.underline,
-                ),
-              );
+              return TextSpan(text: text, style: TextStyle(
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+              ),);
             } else {
-              return TextSpan(text: "$text", style: style);
+              return TextSpan(text: e, style: style);
             }
-          }).toList(),
-        );
-      }).toList(),
-    );
+          });
+        }).toList(),
+      );
+    }
+
+
+    bool isURl(String url) {
+      return RegExp(
+          r'^((?:.|\n)*?)((http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?)')
+          .hasMatch(url);
+    }
   }
-
-
-  bool isURl(String url){
-return  RegExp(r'^((?:.|\n)*?)((http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?)')
-    .hasMatch(url);  }
 }
