@@ -306,7 +306,7 @@ class MentionTagTextEditingController extends TextEditingController {
       style: style,
       children: res.map((e) {
         print("eeeee: " + e.toString());
-        final _validURL = isURl(e);
+        final _validURL = isURL(e);
 
         if (e == Constants.mentionEscape) {
           final mention = tempList.removeAt(0);
