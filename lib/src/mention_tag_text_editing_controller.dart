@@ -336,7 +336,7 @@ class MentionTagTextEditingController extends TextEditingController {
           } else {
              return TextSpan(text: e, style: style);
           }
-        }
+        });
 
       
       }).toList(),
