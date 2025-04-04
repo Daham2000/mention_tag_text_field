@@ -305,7 +305,7 @@ class MentionTagTextEditingController extends TextEditingController {
     TextStyle? style,
     required bool withComposing,
   }) {
-    if (isReadOnly) {
+    if (isReadOnly == false) {
       final regexp =
       RegExp('(?=${Constants.mentionEscape})|(?<=${Constants.mentionEscape})');
       final res = super.text.split(regexp);
