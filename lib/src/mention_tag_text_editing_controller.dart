@@ -314,8 +314,6 @@ class MentionTagTextEditingController extends TextEditingController {
       return TextSpan(
         style: style,
         children: res.map<InlineSpan>((e) {
-          print("eeeee: " + e.toString());
-
           if (e == Constants.mentionEscape) {
             final mention = tempList.removeAt(0);
 
@@ -379,14 +377,7 @@ class MentionTagTextEditingController extends TextEditingController {
                   ),
             );
           }
-          if (_validURL) {
-            return TextSpan(text: e, style: TextStyle(
-              color: Colors.blue,
-              decoration: TextDecoration.underline,
-            ),);
-          } else {
-            return TextSpan(text: e, style: style);
-          }
+          return TextSpan(text: e, style: style);
 
         }).toList(),
       );
