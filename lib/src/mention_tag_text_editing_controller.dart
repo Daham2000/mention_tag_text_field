@@ -306,7 +306,8 @@ class MentionTagTextEditingController extends TextEditingController {
       style: style,
       children: res.map((e) {
         print("eeeee: " + e.toString());
-        final _validURL = isURl(e);
+       
+
 
         if (e == Constants.mentionEscape) {
           final mention = tempList.removeAt(0);
@@ -324,14 +325,19 @@ class MentionTagTextEditingController extends TextEditingController {
                           ),
           );
         }
-        if (_validURL) {
-             return TextSpan(text: e, style: TextStyle(
-          color: Colors.blue,
-          decoration: TextDecoration.underline,
-        ),);
-        } else {
-           return TextSpan(text: e, style: style);
+        List<String> parts = e.split(" ");
+        parts.map((text) {
+            final _validURL = isURl(text);
+            if (_validURL) {
+             return TextSpan(text: text, style: TextStyle(
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+            ),);
+          } else {
+             return TextSpan(text: e, style: style);
+          }
         }
+
       
       }).toList(),
     );
