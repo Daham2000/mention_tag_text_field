@@ -6,6 +6,7 @@ import 'package:mention_tag_text_field/src/mention_tag_data.dart';
 import 'package:mention_tag_text_field/src/mention_tag_decoration.dart';
 import 'package:mention_tag_text_field/src/string_extensions.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/gestures.dart';
 
 class MentionTagTextEditingController extends TextEditingController {
   MentionTagTextEditingController() {
@@ -342,8 +343,8 @@ class MentionTagTextEditingController extends TextEditingController {
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  // You can use url_launcher here to open the link
-                  launchUrl(Uri.parse(e)); // ensure import and async usage
+                  final uri = Uri.parse(e);
+                  launchUrl(uri);
                 },
             );
           }
