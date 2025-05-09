@@ -304,7 +304,7 @@ class MentionTagTextEditingController extends TextEditingController {
     final regexp = RegExp('(?=${Constants.mentionEscape})|(?<=${Constants.mentionEscape})');
     final res = super.text.split(regexp);
     final List tempList = List.from(_mentions);
-    if (isReadOnly == false) {
+    if (isReadOnly == true) {
       final regexp = RegExp(
           '(?=${Constants.mentionEscape})|(?<=${Constants.mentionEscape})');
       final res = super.text.split(regexp);
