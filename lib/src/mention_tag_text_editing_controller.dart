@@ -19,12 +19,15 @@ class MentionTagTextEditingController extends TextEditingController {
     super.dispose();
   }
 
-  Future<void> launchUrl(Uri url) async {
-    if (!await launchUrl(url)) {
-      throw 'Could not launch $url';
+  void launchUrl(Uri uri) async {
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      // Handle error
+      debugPrint('Could not launch $uri');
     }
   }
-
+  
   bool isReadOnly = false;
 
   void setIsReadOnly() {
