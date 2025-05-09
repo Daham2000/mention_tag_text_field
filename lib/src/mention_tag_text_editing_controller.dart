@@ -17,6 +17,18 @@ class MentionTagTextEditingController extends TextEditingController {
     super.dispose();
   }
 
+  bool isReadOnly = false;
+
+  void setIsReadOnly() {
+    isReadOnly = true;
+  }
+
+  bool isURl(String url) {
+    return RegExp(
+        r'^((?:.|\n)*?)((http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?)')
+        .hasMatch(url);
+  }
+
   void _updateCursorPostion() {
     _cursorPosition = selection.base.offset;
     if (_indexMentionEnd == null) return;
@@ -292,7 +304,38 @@ class MentionTagTextEditingController extends TextEditingController {
     final regexp = RegExp('(?=${Constants.mentionEscape})|(?<=${Constants.mentionEscape})');
     final res = super.text.split(regexp);
     final List tempList = List.from(_mentions);
+    if (isReadOnly == false) {
+      final regexp = RegExp(
+          '(?=${Constants.mentionEscape})|(?<=${Constants.mentionEscape})');
+      final res = super.text.split(regexp);
+      final List tempList = List.from(_mentions);
 
+      return TextSpan(
+        style: style,
+        children: res.map((e) {
+          final _validURL = isURl(e);
+
+          if (e == Constants.mentionEscape) {
+            final mention = tempList.removeAt(0);
+
+            return WidgetSpan(
+              alignment: PlaceholderAlignment.middle,
+
+              child: mention.stylingWidget ??
+                  Container(
+                    padding: EdgeInsets.all(4.0),
+                    child: Text(
+                      mention.mention,
+                      style: mentionTagDecoration.mentionTextStyle,
+                    ),
+                  ),
+            );
+          }
+          return TextSpan(text: e, style: style);
+
+        }).toList(),
+      );
+    }
     return TextSpan(
       style: style,
       children: res.map((e) {
