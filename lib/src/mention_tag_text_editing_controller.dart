@@ -5,6 +5,7 @@ import 'package:mention_tag_text_field/src/constants.dart';
 import 'package:mention_tag_text_field/src/mention_tag_data.dart';
 import 'package:mention_tag_text_field/src/mention_tag_decoration.dart';
 import 'package:mention_tag_text_field/src/string_extensions.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MentionTagTextEditingController extends TextEditingController {
   MentionTagTextEditingController() {
@@ -15,6 +16,12 @@ class MentionTagTextEditingController extends TextEditingController {
   void dispose() {
     removeListener(_updateCursorPostion);
     super.dispose();
+  }
+
+  Future<void> launchUrl(Uri url) async {
+    if (!await launchUrl(url)) {
+      throw 'Could not launch $url';
+    }
   }
 
   bool isReadOnly = false;
@@ -305,34 +312,43 @@ class MentionTagTextEditingController extends TextEditingController {
     final res = super.text.split(regexp);
     final List tempList = List.from(_mentions);
     if (isReadOnly == true) {
-      final regexp = RegExp(
-          '(?=${Constants.mentionEscape})|(?<=${Constants.mentionEscape})');
+      final regexp = RegExp('(?=${Constants.mentionEscape})|(?<=${Constants.mentionEscape})');
       final res = super.text.split(regexp);
       final List tempList = List.from(_mentions);
-
+    
       return TextSpan(
         style: style,
         children: res.map((e) {
-          final _validURL = isURl(e);
-
           if (e == Constants.mentionEscape) {
             final mention = tempList.removeAt(0);
-
+    
             return WidgetSpan(
               alignment: PlaceholderAlignment.middle,
-
               child: mention.stylingWidget ??
-                  Container(
-                    padding: EdgeInsets.all(4.0),
-                    child: Text(
-                      mention.mention,
-                      style: mentionTagDecoration.mentionTextStyle,
-                    ),
+                  Text(
+                    mention.mention,
+                    style: mentionTagDecoration.mentionTextStyle,
                   ),
             );
           }
+    
+          // ✅ If it's a URL, create a tappable TextSpan
+          if (isURl(e)) {
+            return TextSpan(
+              text: e,
+              style: style?.copyWith(
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  // You can use url_launcher here to open the link
+                  launchUrl(Uri.parse(e)); // ensure import and async usage
+                },
+            );
+          }
+    
           return TextSpan(text: e, style: style);
-
         }).toList(),
       );
     }
