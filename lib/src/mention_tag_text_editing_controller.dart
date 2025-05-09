@@ -311,57 +311,23 @@ class MentionTagTextEditingController extends TextEditingController {
 
   @override
   TextSpan buildTextSpan({required BuildContext context, TextStyle? style, required bool withComposing}) {
-    final regexp = RegExp('(?=${Constants.mentionEscape})|(?<=${Constants.mentionEscape})');
-    final res = super.text.split(regexp);
+    final mentionEscape = RegExp('(${RegExp.escape(Constants.mentionEscape)})');
+    final urlRegex = RegExp(r'(https?:\/\/[^\s]+)');
+    final combinedRegex = RegExp('(${mentionEscape.pattern})|(${urlRegex.pattern})');
+  
+    final parts = super.text.splitMapJoin(
+      combinedRegex,
+      onMatch: (match) => '\u0000${match[0]}\u0000',
+      onNonMatch: (nonMatch) => '\u0001$nonMatch\u0001',
+    ).split(RegExp(r'[\u0000\u0001]')).where((e) => e.isNotEmpty).toList();
+  
     final List tempList = List.from(_mentions);
-    if (isReadOnly == true) {
-      final regexp = RegExp('(?=${Constants.mentionEscape})|(?<=${Constants.mentionEscape})');
-      final res = super.text.split(regexp);
-      final List tempList = List.from(_mentions);
-    
-      return TextSpan(
-        style: style,
-        children: res.map((e) {
-          if (e == Constants.mentionEscape) {
-            final mention = tempList.removeAt(0);
-    
-            return WidgetSpan(
-              alignment: PlaceholderAlignment.middle,
-              child: mention.stylingWidget ??
-                  Text(
-                    mention.mention,
-                    style: mentionTagDecoration.mentionTextStyle,
-                  ),
-            );
-          }
-    
-          // ✅ If it's a URL, create a tappable TextSpan
-          if (isURl(e)) {
-            print("E print: ${e}");
-            return TextSpan(
-              text: e,
-              style: style?.copyWith(
-                color: Colors.blue,
-                decoration: TextDecoration.underline,
-              ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  final uri = Uri.parse(e);
-                  openUrl(uri);
-                },
-            );
-          }
-    
-        return TextSpan(text: e, style: style);
-        }).toList(),
-      );
-    }
+  
     return TextSpan(
       style: style,
-      children: res.map((e) {
-        if (e == Constants.mentionEscape) {
+      children: parts.map((part) {
+        if (part == Constants.mentionEscape) {
           final mention = tempList.removeAt(0);
-
           return WidgetSpan(
             alignment: PlaceholderAlignment.middle,
             child: mention.stylingWidget ??
@@ -370,8 +336,21 @@ class MentionTagTextEditingController extends TextEditingController {
                   style: mentionTagDecoration.mentionTextStyle,
                 ),
           );
+        } else if (urlRegex.hasMatch(part)) {
+          return TextSpan(
+            text: part,
+            style: style?.copyWith(
+              color: Colors.blue,
+              decoration: TextDecoration.underline,
+            ),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                final uri = Uri.parse(part);
+                openUrl(uri);
+              },
+          );
         }
-        return TextSpan(text: e, style: style);
+        return TextSpan(text: part, style: style);
       }).toList(),
     );
   }
