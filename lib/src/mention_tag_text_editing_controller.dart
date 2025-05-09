@@ -19,11 +19,10 @@ class MentionTagTextEditingController extends TextEditingController {
     super.dispose();
   }
 
-  void launchUrl(Uri uri) async {
+  void openUrl(Uri uri) async {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
-      // Handle error
       debugPrint('Could not launch $uri');
     }
   }
@@ -347,7 +346,7 @@ class MentionTagTextEditingController extends TextEditingController {
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
                   final uri = Uri.parse(e);
-                  launchUrl(uri);
+                  openUrl(uri);
                 },
             );
           }
