@@ -333,6 +333,7 @@ class MentionTagTextEditingController extends TextEditingController {
             child: mention.stylingWidget ??
                 Text(
                   mention.mention,
+                  height: 1.5
                   style: mentionTagDecoration.mentionTextStyle,
                 ),
           );
@@ -342,6 +343,7 @@ class MentionTagTextEditingController extends TextEditingController {
             style: style?.copyWith(
               color: Colors.blue,
               decoration: TextDecoration.underline,
+              height: 1.5
             ),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
@@ -350,7 +352,9 @@ class MentionTagTextEditingController extends TextEditingController {
               },
           );
         }
-        return TextSpan(text: part, style: style);
+        return TextSpan(text: part, style: style?.copyWith(
+          height: 1.5
+        );
       }).toList(),
     );
   }
