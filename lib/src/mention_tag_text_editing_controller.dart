@@ -337,6 +337,7 @@ class MentionTagTextEditingController extends TextEditingController {
     
           // ✅ If it's a URL, create a tappable TextSpan
           if (isURl(e)) {
+            print("E print: ${e}");
             return TextSpan(
               text: e,
               style: style?.copyWith(
@@ -351,11 +352,7 @@ class MentionTagTextEditingController extends TextEditingController {
             );
           }
     
-          return TextSpan(text: e,   style: style?.copyWith(
-                color: Colors.blue,
-                decoration: TextDecoration.underline,
-            height: 6.0
-              ),);
+        return TextSpan(text: e, style: style);
         }).toList(),
       );
     }
