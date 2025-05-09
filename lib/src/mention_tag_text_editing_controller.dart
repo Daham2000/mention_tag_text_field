@@ -353,7 +353,7 @@ class MentionTagTextEditingController extends TextEditingController {
         }
         return TextSpan(text: part, style: style?.copyWith(
           height: 1.5,
-        );
+        ));
       }).toList(),
     );
   }
