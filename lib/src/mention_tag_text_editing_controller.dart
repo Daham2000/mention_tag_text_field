@@ -351,7 +351,11 @@ class MentionTagTextEditingController extends TextEditingController {
             );
           }
     
-          return TextSpan(text: e, style: style);
+          return TextSpan(text: e,   style: style?.copyWith(
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+            height: 6.0
+              ),);
         }).toList(),
       );
     }
