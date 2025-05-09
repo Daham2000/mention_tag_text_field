@@ -333,7 +333,6 @@ class MentionTagTextEditingController extends TextEditingController {
             child: mention.stylingWidget ??
                 Text(
                   mention.mention,
-                  height: 1.5
                   style: mentionTagDecoration.mentionTextStyle,
                 ),
           );
