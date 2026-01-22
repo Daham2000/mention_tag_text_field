@@ -150,7 +150,7 @@ class MentionTagTextEditingController extends TextEditingController {
     Widget? stylingWidget,
   }) {
     final indexCursor = selection.base.offset;
-    final mentionSymbol = _mentionInput!.first;
+    final mentionSymbol = _mentionInput != null ? _mentionInput!.first : "@";
 
     final mention = mentionTagDecoration.showMentionStartSymbol ? "$mentionSymbol$label" : label;
     final MentionTagElement mentionTagElement =
