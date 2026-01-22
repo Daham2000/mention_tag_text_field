@@ -137,7 +137,7 @@ class MentionTagTextEditingController extends TextEditingController {
   }
 
   String _temp = '';
-  String? _mentionInput;
+  String? _mentionInput = "@";
 
   /// Mention or Tag label, this label will be visible in the Text Field.
   ///
