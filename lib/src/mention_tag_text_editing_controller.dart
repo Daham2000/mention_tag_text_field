@@ -160,7 +160,7 @@ class MentionTagTextEditingController extends TextEditingController {
     final indexPosition = textPart.countChar(Constants.mentionEscape);
     _mentions.insert(indexPosition, mentionTagElement);
 
-    _replaceLastSubstringWithEscaping(indexCursor, _mentionInput!);
+    _replaceLastSubstringWithEscaping(indexCursor, _mentionInput ?? "@");
   }
 
   void _replaceLastSubstringWithEscaping(int indexCursor, String replacement) {
